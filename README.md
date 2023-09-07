@@ -3,7 +3,7 @@ This is the official implementation of the ICCV'23 paper [Object-Centric Multipl
 
 ## Introduction
 
-![framework](srcs/Kins_Car.jpg)
+![framework](srcs/framework.png)
 
 OC-MOT  is a framework designed to perform multiple object tracking on object-centric representations without object ID labels. It consists of an index-merge module that adapts the object-centric slots into detection outputs and an unsupervised memory module that builds complete object prototypes to handle occlusions. Benefited from object-centric learning, we only requires sparse detection labels for object localization and feature binding. Our experiments significantly narrow the gap between the existing object-centric model and the fully supervised state-of-the-art and outperform several unsupervised trackers.
 
@@ -42,10 +42,10 @@ The pre-trained models will be uploaded soon.
 
 ## Demo
 MOT performance comparison with video object-centric model SAVi:
-https://youtu.be/FohvMwJH2LY
+![demo1](srcs/cater_demo.gif)
 
 Extension to real-world videos. We point out in the main paper that existing object-centric models show bad detection / segmentation performance on real-world videos. However, one highlight of this work is our novel framework to learn object association in a self-supervised manner, which is agnostic to the detection module. For real-world purposes, we replace the detection module with [SEEM](https://arxiv.org/abs/2304.06718) and train OC-MOT with self-supervised feature loss. From the visualizations below, we also observe quite inspring tracking performance on objects such as persons and cars.
-https://youtu.be/uKp-T_lIcLo
+![demo1](srcs/real_world_demo.gif)
 
 
 ## Citation
