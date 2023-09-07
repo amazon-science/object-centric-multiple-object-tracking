@@ -1,6 +1,5 @@
 # Object-Centric Multiple Object Tracking (OC-MOT)
-[![Linting and Testing Status](https://github.com/amazon-science/object-centric-multiple-object-tracking/actions/workflows/lint_and_test.yaml/badge.svg?branch=main)](https://github.com/amazon-science/oobject-centric-multiple-object-tracking/actions/workflows/lint_and_test.yaml)
-[![Docs site](https://img.shields.io/badge/docs-GitHub_Pages-blue)](https://amazon-science.github.io/object-centric-multiple-object-tracking/)
+[![Docs site](https://img.shields.io/badge/docs-GitHub_Pages-blue)](https://arxiv.org/abs/2309.00233)
 
 ## Introduction
 
