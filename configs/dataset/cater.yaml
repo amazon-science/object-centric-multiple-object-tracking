@@ -1,0 +1,9 @@
+# Video dataset CATER based on https://github.com/deepmind/multi_object_datasets .
+defaults:
+  - webdataset
+train_shards: ${dataset_prefix:"cater_with_masks/train/shard-{000000..000152}.tar"}
+train_size: 35427
+val_shards: ${dataset_prefix:"cater_with_masks/val/shard-{000000..000016}.tar"}
+val_size: 50  #3937
+test_shards: ${dataset_prefix:"cater_with_masks/test/shard-{000000..000073}.tar"}
+test_size: 17100

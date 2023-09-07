@@ -1,0 +1,49 @@
+# @package _global_
+defaults:
+  - /plugins/data_preprocessing@plugins.03a_preprocessing
+  - /plugins/multi_element_preprocessing@plugins.03b_preprocessing
+
+plugins:
+  03a_preprocessing:
+    training_fields:
+      - image
+      - mask
+      - object_positions
+      - __key__
+    training_transform:
+      _target_: torchvision.transforms.Compose
+      transforms:
+        - _target_: ocl.preprocessing.AddBBoxFromInstanceMasks
+    evaluation_fields:
+      - image
+      - mask
+      - object_positions
+      - __key__
+    evaluation_transform:
+      _target_: torchvision.transforms.Compose
+      transforms:
+        - _target_: ocl.preprocessing.AddBBoxFromInstanceMasks
+
+  03b_preprocessing:
+    training_transforms:
+      image:
+        _target_: ocl.preprocessing.VideoToTensor
+      instance_bbox:
+        _target_: ocl.preprocessing.BBoxToTensor
+      instance_cls:
+        _target_: ocl.preprocessing.ClsToTensor
+      instance_id:
+        _target_: ocl.preprocessing.IDToTensor
+      mask:
+        _target_: ocl.preprocessing.MultiMaskToTensor
+    evaluation_transforms:
+      image:
+        _target_: ocl.preprocessing.VideoToTensor
+      instance_bbox:
+        _target_: ocl.preprocessing.BBoxToTensor
+      instance_cls:
+        _target_: ocl.preprocessing.ClsToTensor
+      instance_id:
+        _target_: ocl.preprocessing.IDToTensor
+      mask:
+        _target_: ocl.preprocessing.MultiMaskToTensor

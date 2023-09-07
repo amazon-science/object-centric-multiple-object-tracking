@@ -1,0 +1,164 @@
+# @package _global_
+# An example implementaiton of SAVi that leverages a model definition in code.
+# The code can be found in `ocl/models/savi.py`, the config is used to
+# instantiate the submodules used by the code.
+defaults:
+  - /experiment/_output_path
+  - /training_config
+  - /dataset: cater
+  - /plugins/optimization@plugins.optimize_parameters
+  - /plugins/random_strided_window@plugins.02_random_strided_window         # Used during training.
+  - /plugins/multi_element_preprocessing@plugins.03_preprocessing
+  - /optimizers/adam@plugins.optimize_parameters.optimizer
+  - /lr_schedulers/cosine_annealing@plugins.optimize_parameters.lr_scheduler
+  - /experiment/SAVi/_cater_bbox_mot_preprocessing
+  - /metrics/mot_metric@evaluation_metrics.mot
+  - _self_
+
+load_checkpoint: outputs/OC-MOT/cater/2023-07-27_06-43-22/checkpoints/epoch=59-step=66420.ckpt #seg+rec loss
+
+trainer:
+  gpus: 8
+  gradient_clip_val: 0.05
+  gradient_clip_algorithm: "norm"
+  max_epochs: null
+  max_steps: 100000
+  strategy: 'ddp'
+  callbacks:
+    - _target_: pytorch_lightning.callbacks.LearningRateMonitor
+      logging_interval: "step"
+
+
+dataset:
+  num_workers: 4
+  batch_size: 8
+
+models:
+  _target_: ocl.models.SAVi_mem
+  freeze: True
+
+  conditioning:
+    _target_: ocl.conditioning.LearntConditioning
+    n_slots: 11
+    object_dim: 128
+
+
+  feature_extractor:
+    # Use the smaller verion of the feature extractor architecture.
+    _target_: ocl.feature_extractors.SAViFeatureExtractor
+    larger_input_arch: False
+
+  perceptual_grouping:
+    _target_: ocl.perceptual_grouping.SlotAttentionGrouping
+    feature_dim: 32
+    object_dim: ${models.conditioning.object_dim}
+    iters: 2
+    kvq_dim: 128
+    use_projection_bias: false
+    positional_embedding:
+      _target_: ocl.utils.Sequential
+      _args_:
+        - _target_: ocl.utils.SoftPositionEmbed
+          n_spatial_dims: 2
+          feature_dim: 32
+          savi_style: true
+        - _target_: ocl.neural_networks.build_two_layer_mlp
+          input_dim: 32
+          output_dim: 32
+          hidden_dim: 64
+          initial_layer_norm: true
+    ff_mlp: null
+
+  decoder:
+    _target_: ocl.decoding.SlotAttentionDecoder
+    decoder:
+      _target_: ocl.decoding.get_savi_decoder_backbone
+      object_dim: ${models.perceptual_grouping.object_dim}
+      larger_input_arch: False
+    positional_embedding:
+      _target_: ocl.utils.SoftPositionEmbed
+      n_spatial_dims: 2
+      feature_dim: ${models.perceptual_grouping.object_dim}
+      cnn_channel_order: true
+      savi_style: true
+
+
+  transition_model:
+    _target_: torch.nn.Identity
+
+  memory:
+    _target_: ocl.memory.SelfSupervisedMemory
+    stale_number: 4
+    embed_dim: 128
+    num_objects: 12
+    memory_len: 7
+
+
+losses:
+  merge_loss:
+    _target_: ocl.losses.EM_loss
+    pred_mask_path: mem_masks.masks
+    tgt_mask_path: decoder.masks
+    tgt_vis_path: decoder.masks_eval
+    rec_path: mem_masks.object_reconstructions
+    img_path: input.image
+    attn_index_path: attn_index
+    pred_feat_path: objects
+    gt_feat_path: slots
+    loss_weight: 10 #100
+
+
+
+plugins:
+  optimize_parameters:
+    optimizer:
+      lr: 0.0001
+    lr_scheduler:
+      T_max: 200000
+      eta_min: 0.0
+      warmup_steps: 0
+  02_random_strided_window:
+    n_consecutive_frames: 10
+    training_fields:
+      - image
+      - mask
+    evaluation_fields: []
+
+visualizations:
+  input:
+    _target_: ocl.visualizations.Video
+    denormalization: null
+    video_path: input.image
+  reconstruction:
+    _target_: ocl.visualizations.Video
+    denormalization: ${..input.denormalization}
+    video_path: decoder.reconstruction
+  slot_obj:
+    _target_: ocl.visualizations.VisualObject
+    denormalization: ${..input.denormalization}
+    object_path: decoder.object_reconstructions
+    mask_path: decoder.masks_eval
+
+  merged_obj:
+    _target_: ocl.visualizations.VisualObject
+    denormalization: ${..input.denormalization}
+    object_path: mem_masks.object_reconstructions
+    mask_path: mem_masks.masks_eval
+  rollout:
+    _target_: ocl.visualizations.VisualObject
+    denormalization: ${..input.denormalization}
+    object_path: rollout_decode.object_reconstructions
+    mask_path: rollout_decode.masks
+  objectmot:
+    _target_: ocl.visualizations.ObjectMOT
+    n_clips: 1
+    denormalization: null
+    video_path: input.image
+    mask_path: tracks
+
+evaluation_metrics:
+  mot:
+    prediction_path: tracks
+    target_path: input.mask
+    threshold: 0.7
+    ignore_background: True
