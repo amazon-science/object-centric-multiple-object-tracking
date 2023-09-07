@@ -1,9 +1,9 @@
 # Object-Centric Multiple Object Tracking (OC-MOT)
-[![Docs site](https://img.shields.io/badge/docs-GitHub_Pages-blue)](https://arxiv.org/abs/2309.00233)
+This is the official implementation of the ICCV'23 paper [Object-Centric Multiple Object Tracking]([https://arxiv.org/abs/2210.12733](https://arxiv.org/abs/2309.00233)) . The code was implemented by [Zixu Zhao](https://github.com/zxzhaoeric), [Jiaze Wang](https://jiazewang.com/), [Max Horn](https://github.com/ExpectationMax) and [Tianjun Xiao](http://tianjunxiao.com/).
 
 ## Introduction
 
-![framework](https://imgur.com/gallery/KslHGW9)
+![framework](srcs/Kins_Car.jpg)
 
 OC-MOT  is a framework designed to perform multiple object tracking on object-centric representations without object ID labels. It consists of an index-merge module that adapts the object-centric slots into detection outputs and an unsupervised memory module that builds complete object prototypes to handle occlusions. Benefited from object-centric learning, we only requires sparse detection labels for object localization and feature binding. Our experiments significantly narrow the gap between the existing object-centric model and the fully supervised state-of-the-art and outperform several unsupervised trackers.
 
