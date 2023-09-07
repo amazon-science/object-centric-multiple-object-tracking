@@ -133,7 +133,7 @@ urllib3==1.26.9
 virtualenv==20.15.1
 webdataset==0.1.103
 webencodings==0.5.1
-Werkzeug==2.1.2
+Werkzeug==2.2.3
 xmltodict==0.13.0
 yarl==1.7.2
 zipp==3.8.0
