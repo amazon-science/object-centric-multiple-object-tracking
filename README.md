@@ -1,5 +1,5 @@
 # Object-Centric Multiple Object Tracking (OC-MOT)
-This is the official implementation of the ICCV'23 paper [Object-Centric Multiple Object Tracking](https://arxiv.org/abs/2309.00233)) . The code was implemented by [Zixu Zhao](https://github.com/zxzhaoeric), [Jiaze Wang](https://jiazewang.com/), [Max Horn](https://github.com/ExpectationMax) and [Tianjun Xiao](http://tianjunxiao.com/).
+This is the official implementation of the ICCV'23 paper [Object-Centric Multiple Object Tracking](https://arxiv.org/abs/2309.00233). The code was implemented by [Zixu Zhao](https://github.com/zxzhaoeric), [Jiaze Wang](https://jiazewang.com/), [Max Horn](https://github.com/ExpectationMax) and [Tianjun Xiao](http://tianjunxiao.com/).
 
 ## Introduction
 
