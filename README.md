@@ -42,9 +42,11 @@ The pre-trained models will be uploaded soon.
 
 ## Demo
 MOT performance comparison with video object-centric model SAVi:
+
 ![demo1](srcs/cater_demo.gif)
 
 Extension to real-world videos. We point out in the main paper that existing object-centric models show bad detection / segmentation performance on real-world videos. However, one highlight of this work is our novel framework to learn object association in a self-supervised manner, which is agnostic to the detection module. For real-world purposes, we replace the detection module with [SEEM](https://arxiv.org/abs/2304.06718) and train OC-MOT with self-supervised feature loss. From the visualizations below, we also observe quite inspring tracking performance on objects such as persons and cars.
+
 ![demo1](srcs/real_world_demo.gif)
 
 
