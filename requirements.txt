@@ -51,7 +51,7 @@ iniconfig==1.1.1
 isort==5.10.1
 jeepney==0.8.0
 jmespath==1.0.1
-joblib==1.1.0
+joblib==1.2.0
 keyring==23.8.2
 kiwisolver==1.4.3
 lap==0.4.0
